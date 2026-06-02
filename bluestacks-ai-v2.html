@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlueStacks.ai - Skill Marketplace</title>
+<style>
+  :root{
+    --blue:#2563ff; --blue-600:#1d4ed8; --blue-50:#eef3ff; --blue-100:#dbe6ff;
+    --ink:#0f172a; --slate:#475569; --muted:#7c8aa3; --line:#e6ebf3;
+    --bg:#f5f7fc; --card:#ffffff; --green:#10b981; --amber:#f59e0b;
+    --radius:18px; --shadow:0 1px 2px rgba(16,30,54,.04),0 8px 24px rgba(16,30,54,.06);
+    --shadow-lg:0 12px 40px rgba(37,99,255,.16);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  /* ---------- top nav ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;gap:24px;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;cursor:pointer}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2563ff,#5b8cff);display:grid;place-items:center;color:#fff;font-size:16px;box-shadow:0 4px 12px rgba(37,99,255,.35)}
+  .logo small{font-weight:600;color:var(--blue);font-size:11px;background:var(--blue-50);padding:2px 7px;border-radius:999px;margin-left:2px}
+  .nav-search{flex:1;max-width:440px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--muted);font-size:14px}
+  .nav-search input{border:0;outline:0;flex:1;font-size:14px;color:var(--ink);background:transparent}
+  .nav-links{display:flex;gap:22px;align-items:center;font-size:14px;font-weight:600;color:var(--slate)}
+  .nav-links .pill{background:var(--blue);color:#fff;padding:9px 16px;border-radius:11px;box-shadow:0 6px 16px rgba(37,99,255,.3)}
+  /* ---------- hero ---------- */
+  .hero{padding:54px 0 30px;text-align:center;background:radial-gradient(1100px 380px at 50% -120px,#e7eeff 0%,rgba(231,238,255,0) 70%)}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--blue-100);padding:7px 14px;border-radius:999px;box-shadow:var(--shadow)}
+  .hero h1{font-size:46px;line-height:1.08;letter-spacing:-.03em;margin:20px auto 12px;max-width:760px;font-weight:820}
+  .hero h1 .grad{background:linear-gradient(120deg,#2563ff,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:18px;color:var(--slate);max-width:560px;margin:0 auto 26px}
+  .hero-search{max-width:560px;margin:0 auto;display:flex;gap:8px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 8px 8px 18px;box-shadow:var(--shadow)}
+  .hero-search input{flex:1;border:0;outline:0;font-size:16px;background:transparent}
+  .hero-search button{background:var(--blue);color:#fff;border:0;border-radius:11px;padding:0 22px;font-size:15px;font-weight:700;cursor:pointer}
+  .hero-stats{display:flex;gap:30px;justify-content:center;margin-top:24px;color:var(--muted);font-size:13px;font-weight:600}
+  .hero-stats b{color:var(--ink);font-size:18px;display:block;font-weight:800}
+  /* ---------- category chips ---------- */
+  .cats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:30px 0 10px}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--slate);font-weight:650;font-size:13.5px;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
+  .chip:hover{border-color:var(--blue-100);color:var(--blue)}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.active:hover{color:#fff}
+  /* ---------- section ---------- */
+  .section{padding:26px 0 10px}
+  .section h2{font-size:21px;letter-spacing:-.02em;margin:0 0 3px;font-weight:780}
+  .section .sub{color:var(--muted);font-size:14px;margin-bottom:18px}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+  /* ---------- skill grid + cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:920px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;min-height:202px;position:relative}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--blue-100)}
+  .card .top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .card .ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:23px;flex:none}
+  .card .cat-tag{font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-50);padding:4px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
+  .card h3{font-size:17px;margin:0 0 6px;letter-spacing:-.01em;font-weight:760;line-height:1.25}
+  .card .mech{color:var(--slate);font-size:13.5px;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card .foot{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+  .card .rate{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
+  .card .rate b{color:var(--ink)}
+  .card .add{font-size:13px;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:5px}
+  .feat-badge{position:absolute;top:16px;right:16px;font-size:10.5px;font-weight:800;color:#fff;background:linear-gradient(120deg,#f59e0b,#f97316);padding:3px 9px;border-radius:999px;letter-spacing:.04em}
+  /* ---------- featured row ---------- */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:920px){.feat-grid{grid-template-columns:1fr}}
+  .feat-card{border-radius:22px;padding:24px;color:#fff;cursor:pointer;min-height:230px;display:flex;flex-direction:column;justify-content:space-between;transition:.18s;position:relative;overflow:hidden}
+  .feat-card:hover{transform:translateY(-3px)}
+  .feat-card .fc-ico{width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:26px}
+  .feat-card h3{font-size:21px;margin:16px 0 8px;letter-spacing:-.02em;line-height:1.15;font-weight:800}
+  .feat-card p{font-size:14px;opacity:.92;margin:0}
+  .feat-card .fc-foot{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:650;margin-top:18px;opacity:.95}
+  .blob{position:absolute;border-radius:50%;filter:blur(6px);opacity:.25;background:#fff;width:160px;height:160px;right:-50px;bottom:-60px}
+  /* ---------- detail view ---------- */
+  #detail{display:none}
+  .back{display:inline-flex;align-items:center;gap:7px;color:var(--slate);font-weight:650;font-size:14px;cursor:pointer;margin:26px 0 18px}
+  .back:hover{color:var(--blue)}
+  .d-hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:8px 0 18px}
+  @media(max-width:860px){.d-hero{grid-template-columns:1fr;gap:26px}}
+  .d-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .d-eyebrow .ico{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:26px}
+  .d-eyebrow .cat-tag{font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-50);padding:5px 11px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+  .d-hero h1{font-size:40px;line-height:1.1;letter-spacing:-.03em;margin:6px 0 14px;font-weight:820}
+  .d-hero .lede{font-size:18px;color:var(--slate);margin:0 0 24px;max-width:520px}
+  .d-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .btn{border:0;border-radius:13px;padding:14px 26px;font-size:15px;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;gap:9px}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(37,99,255,.32)}
+  .btn-primary:hover{background:var(--blue-600)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .d-meta{display:flex;gap:26px;margin-top:22px;font-size:13px;color:var(--muted);font-weight:600}
+  .d-meta b{color:var(--ink);display:block;font-size:15px}
+  /* result preview card (the "value shown") */
+  .preview{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+  .pv-head{background:linear-gradient(120deg,#2563ff,#5b8cff);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+  .pv-head .dot{width:9px;height:9px;border-radius:50%;background:#fff;opacity:.85}
+  .pv-body{padding:18px}
+  .pv-user{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .pv-user span{background:var(--blue-50);color:var(--blue-600);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:14px 14px 4px 14px;max-width:80%}
+  .pv-ai{display:flex;gap:10px;margin-bottom:8px}
+  .pv-ai .av{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2563ff,#7c5cff);display:grid;place-items:center;flex:none;font-size:15px}
+  .pv-bubble{background:#f6f8fc;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:13px 15px;font-size:13.5px;color:var(--ink);flex:1}
+  .pv-bubble .row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+  .pv-bubble .row:last-child{border-bottom:0}
+  .pv-bubble .row .g{color:var(--green);font-weight:700}
+  .pv-bubble .row .b{color:var(--blue);font-weight:700}
+  .pv-bubble strong{font-weight:750}
+  .pv-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--green);background:#e7f7f0;padding:3px 9px;border-radius:999px;margin-top:4px}
+  /* content blocks */
+  .d-section{padding:34px 0;border-top:1px solid var(--line)}
+  .d-section h2{font-size:24px;letter-spacing:-.02em;margin:0 0 6px;font-weight:800}
+  .d-section .s-sub{color:var(--muted);font-size:15px;margin-bottom:24px}
+  .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:760px){.value-grid{grid-template-columns:1fr}}
+  .value-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+  .value-item .vi-ico{width:42px;height:42px;border-radius:12px;background:var(--blue-50);display:grid;place-items:center;font-size:21px;margin-bottom:14px}
+  .value-item h4{margin:0 0 6px;font-size:16px;font-weight:740}
+  .value-item p{margin:0;color:var(--slate);font-size:14px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(max-width:760px){.steps{grid-template-columns:1fr;gap:18px}}
+  .step{padding:0 24px;position:relative}
+  .step:not(:last-child)::after{content:"";position:absolute;right:0;top:18px;bottom:0;width:1px;background:var(--line)}
+  @media(max-width:760px){.step:not(:last-child)::after{display:none}}
+  .step .num{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;margin-bottom:13px}
+  .step h4{margin:0 0 5px;font-size:16px;font-weight:740}
+  .step p{margin:0;color:var(--slate);font-size:14px}
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
+  @media(max-width:620px){.specs{grid-template-columns:1fr}}
+  .spec-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .spec-row .k{color:var(--muted);font-weight:600}
+  .spec-row .v{font-weight:700;text-align:right}
+  .apps{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .apps span{background:var(--blue-50);color:var(--blue-600);font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px}
+  .perm{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--slate);padding:8px 0}
+  .perm .ck{color:var(--green);font-weight:800}
+  footer{padding:46px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+  .empty{text-align:center;color:var(--muted);padding:50px 0;font-size:15px}
+  /* ---------- creators ---------- */
+  #creators{display:none}
+  .cr-hero{text-align:center;padding:54px 0 18px;background:radial-gradient(1100px 380px at 50% -120px,#e7eeff 0%,rgba(231,238,255,0) 70%)}
+  .cr-hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--blue-100);padding:7px 14px;border-radius:999px;box-shadow:var(--shadow)}
+  .cr-hero h1{font-size:46px;line-height:1.08;letter-spacing:-.03em;margin:20px auto 12px;max-width:780px;font-weight:820}
+  .cr-hero h1 .grad{background:linear-gradient(120deg,#2563ff,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cr-hero p{font-size:18px;color:var(--slate);max-width:600px;margin:0 auto 24px}
+  .credit-badge{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(120deg,#2563ff,#7c5cff);color:#fff;font-weight:800;font-size:17px;padding:12px 22px;border-radius:14px;box-shadow:0 12px 30px rgba(37,99,255,.3)}
+  .credit-badge .big{font-size:24px}
+  .timeline{max-width:760px;margin:14px auto 0;position:relative}
+  .tl-step{display:flex;gap:20px;text-align:left;padding:18px 0;position:relative}
+  .tl-step:not(:last-child)::after{content:"";position:absolute;left:23px;top:54px;bottom:-18px;width:2px;background:var(--line)}
+  .tl-num{width:48px;height:48px;border-radius:14px;background:#fff;border:2px solid var(--blue-100);color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:18px;flex:none;z-index:1}
+  .tl-step.hot .tl-num{background:linear-gradient(135deg,#2563ff,#7c5cff);color:#fff;border-color:transparent}
+  .tl-body h4{margin:6px 0 5px;font-size:18px;font-weight:760}
+  .tl-body p{margin:0;color:var(--slate);font-size:14.5px}
+  .tl-body .note{margin-top:8px;display:inline-flex;align-items:center;gap:8px;background:var(--blue-50);border:1px solid var(--blue-100);color:var(--blue-600);font-size:13px;font-weight:650;padding:7px 12px;border-radius:10px}
+  .form-card{max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:var(--shadow)}
+  .form-card h3{margin:0 0 4px;font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .form-card .fc-sub{color:var(--muted);font-size:14.5px;margin-bottom:22px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:7px}
+  .field label .opt{color:var(--muted);font-weight:500}
+  .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px;font-family:inherit;color:var(--ink);outline:0;background:#fbfcfe;transition:.15s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-50)}
+  .field textarea{resize:vertical;min-height:88px}
+  .field .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .field.error input,.field.error select,.field.error textarea{border-color:#ef4444;background:#fff5f5}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:560px){.row2{grid-template-columns:1fr}}
+  .email-note{display:flex;gap:10px;align-items:flex-start;background:#fff8e8;border:1px solid #fde9b8;border-radius:12px;padding:12px 14px;font-size:13px;color:#92670c;margin-bottom:20px}
+  .submit-btn{width:100%;background:var(--blue);color:#fff;border:0;border-radius:13px;padding:15px;font-size:16px;font-weight:760;cursor:pointer;box-shadow:0 10px 24px rgba(37,99,255,.3)}
+  .submit-btn:hover{background:var(--blue-600)}
+  .form-foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:14px}
+  .success{max-width:560px;margin:30px auto;background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px 34px;text-align:center;box-shadow:var(--shadow)}
+  .success .ok{width:66px;height:66px;border-radius:50%;background:#e7f7f0;display:grid;place-items:center;font-size:32px;margin:0 auto 18px}
+  .success h3{font-size:24px;margin:0 0 10px;font-weight:800}
+  .success p{color:var(--slate);font-size:15px;margin:0 auto 8px;max-width:430px}
+  .success .em{font-weight:750;color:var(--ink)}
+  .success .next{text-align:left;background:#f6f8fc;border:1px solid var(--line);border-radius:14px;padding:18px;margin:22px 0 8px}
+  .success .next .nx{display:flex;gap:11px;align-items:flex-start;padding:7px 0;font-size:14px;color:var(--slate)}
+  .success .next .nx b{color:var(--ink)}
+  /* ---------- landing (product homepage) ---------- */
+  #landing{display:none}
+  .lp-hero{padding:64px 0 36px;background:radial-gradient(1200px 460px at 50% -160px,#e7eeff 0%,rgba(231,238,255,0) 72%)}
+  .lp-hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  @media(max-width:880px){.lp-hero-inner{grid-template-columns:1fr;gap:30px}}
+  .lp-hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--blue-100);padding:7px 14px;border-radius:999px;box-shadow:var(--shadow)}
+  .lp-hero h1{font-size:52px;line-height:1.05;letter-spacing:-.035em;margin:20px 0 16px;font-weight:840}
+  .lp-hero h1 .grad{background:linear-gradient(120deg,#2563ff,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lp-hero .lede{font-size:19px;color:var(--slate);margin:0 0 26px;max-width:520px}
+  .lp-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .lp-meta{display:flex;gap:26px;margin-top:26px;font-size:13px;color:var(--muted);font-weight:600}
+  .lp-meta b{color:var(--ink);display:block;font-size:16px}
+  /* hero chat mock */
+  .hero-mock{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+  .hm-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line)}
+  .hm-bar .d{width:10px;height:10px;border-radius:50%;background:#e2e8f0}
+  .hm-bar .ttl{margin-left:8px;font-size:12.5px;color:var(--muted);font-weight:650}
+  .hm-bar .chipm{margin-left:auto;font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-50);padding:4px 9px;border-radius:999px}
+  .hm-body{padding:18px}
+  .hm-u{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .hm-u span{background:var(--blue-50);color:var(--blue-600);font-weight:600;font-size:13.5px;padding:10px 14px;border-radius:14px 14px 4px 14px}
+  .hm-a{display:flex;gap:10px;margin-bottom:12px}
+  .hm-a .av{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2563ff,#7c5cff);display:grid;place-items:center;flex:none;font-size:15px;color:#fff}
+  .hm-a .bub{background:#f6f8fc;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:12px 14px;font-size:13.5px;flex:1}
+  .hm-a .bub .step{display:flex;align-items:center;gap:9px;padding:5px 0;color:var(--slate)}
+  .hm-a .bub .step .tick{color:var(--green);font-weight:800}
+  .hm-a .bub .step .spin{color:var(--blue);font-weight:800}
+  /* pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+  @media(max-width:820px){.pillars{grid-template-columns:1fr}}
+  .pillar{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}
+  .pillar .pi{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:24px;margin-bottom:15px;background:var(--blue-50)}
+  .pillar h3{margin:0 0 7px;font-size:18px;font-weight:780;letter-spacing:-.01em}
+  .pillar p{margin:0;color:var(--slate);font-size:14.5px}
+  .pillar .models{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+  .pillar .models span{font-size:11.5px;font-weight:700;color:var(--slate);background:#f1f5fb;border:1px solid var(--line);padding:4px 9px;border-radius:8px}
+  .pillar .phones{margin-top:13px;display:flex;flex-direction:column;gap:8px}
+  .pillar .phones .ph{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}
+  .pillar .phones .ph .ok{color:var(--green);font-weight:800}
+  .pillar .phones .ph .soon{font-size:10.5px;font-weight:700;color:var(--amber);background:#fff3da;padding:2px 7px;border-radius:999px;margin-left:auto}
+  /* intake */
+  .intake{background:linear-gradient(135deg,#0f1f3d,#16306b);border-radius:26px;padding:46px 40px;color:#fff;text-align:center;position:relative;overflow:hidden;margin-top:10px}
+  .intake .glow{position:absolute;width:340px;height:340px;border-radius:50%;background:#2563ff;filter:blur(90px);opacity:.45;top:-120px;right:-60px}
+  .intake h2{font-size:30px;letter-spacing:-.02em;margin:0 0 8px;font-weight:820;position:relative}
+  .intake p{color:#c7d4ea;font-size:16px;margin:0 auto 24px;max-width:520px;position:relative}
+  .intake-box{max-width:600px;margin:0 auto;display:flex;gap:8px;background:#fff;border-radius:16px;padding:8px 8px 8px 18px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+  .intake-box input{flex:1;border:0;outline:0;font-size:16px;background:transparent;color:var(--ink)}
+  .intake-box button{background:var(--blue);color:#fff;border:0;border-radius:11px;padding:0 22px;font-size:15px;font-weight:750;cursor:pointer}
+  .goal-chips{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:18px;position:relative}
+  .goal-chips .gc{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:13px;font-weight:600;padding:9px 15px;border-radius:999px;cursor:pointer;transition:.15s}
+  .goal-chips .gc:hover{background:rgba(255,255,255,.2)}
+  /* how it works (landing) */
+  .hiw{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  @media(max-width:820px){.hiw{grid-template-columns:1fr 1fr;gap:24px 0}}
+  @media(max-width:520px){.hiw{grid-template-columns:1fr}}
+  .hiw .h{padding:0 24px;position:relative}
+  .hiw .h:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:6px;color:var(--blue-100);font-weight:800;font-size:20px}
+  @media(max-width:820px){.hiw .h::after{display:none}}
+  .hiw .h .ic{width:46px;height:46px;border-radius:13px;background:var(--blue-50);display:grid;place-items:center;font-size:23px;margin-bottom:12px}
+  .hiw .h h4{margin:0 0 5px;font-size:16px;font-weight:740}
+  .hiw .h p{margin:0;color:var(--slate);font-size:14px}
+  /* closing cta */
+  .closer{background:linear-gradient(120deg,#2563ff,#5b8cff);border-radius:26px;padding:50px 40px;text-align:center;color:#fff;margin:20px 0}
+  .closer h2{font-size:32px;letter-spacing:-.02em;margin:0 0 10px;font-weight:820}
+  .closer p{font-size:17px;opacity:.92;margin:0 auto 24px;max-width:480px}
+  .closer .btn-white{background:#fff;color:var(--blue);border:0;border-radius:13px;padding:15px 30px;font-size:16px;font-weight:760;cursor:pointer}
+  /* ---------- journey modal ---------- */
+  .modal-bg{display:none;position:fixed;inset:0;z-index:100;background:rgba(10,20,40,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px}
+  .modal-bg.open{display:flex}
+  .modal{background:#fff;border-radius:24px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4);display:flex;flex-direction:column}
+  .modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px}
+  .modal-head .x{margin-left:auto;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;background:none;border:0}
+  .stepdots{display:flex;gap:6px}
+  .stepdots .sd{width:26px;height:5px;border-radius:999px;background:var(--line)}
+  .stepdots .sd.on{background:var(--blue)}
+  .stepdots .sd.done{background:var(--green)}
+  .modal-body{padding:26px 24px;overflow:auto}
+  .modal-body .kicker{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .modal-body h3{margin:0 0 6px;font-size:23px;font-weight:800;letter-spacing:-.02em}
+  .modal-body .msub{color:var(--slate);font-size:14.5px;margin:0 0 20px}
+  .opt-card{display:flex;align-items:center;gap:14px;border:1.5px solid var(--line);border-radius:14px;padding:15px;cursor:pointer;margin-bottom:11px;transition:.15s}
+  .opt-card:hover{border-color:var(--blue-100)}
+  .opt-card.sel{border-color:var(--blue);background:var(--blue-50)}
+  .opt-card.dis{opacity:.55;cursor:not-allowed;background:#fafbfd}
+  .opt-card .oc-ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:21px;flex:none;background:#f1f5fb}
+  .opt-card .oc-t b{display:block;font-size:15px;font-weight:740}
+  .opt-card .oc-t span{font-size:13px;color:var(--muted)}
+  .opt-card .oc-r{margin-left:auto;font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px}
+  .oc-r.green{color:var(--green);background:#e7f7f0}
+  .oc-r.soon{color:var(--amber);background:#fff3da}
+  .oc-r.check{color:#fff;background:var(--blue);width:24px;height:24px;display:grid;place-items:center;padding:0;border-radius:50%}
+  .login-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:13px;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:11px}
+  .login-btn:hover{border-color:var(--blue-100)}
+  .modal-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .modal-foot .back{margin:0;color:var(--slate);font-weight:650;cursor:pointer;font-size:14px}
+  .modal-foot .cont{margin-left:auto;background:var(--blue);color:#fff;border:0;border-radius:12px;padding:13px 26px;font-size:15px;font-weight:740;cursor:pointer}
+  .modal-foot .cont:disabled{opacity:.4;cursor:not-allowed}
+  .ready-box{text-align:center;padding:6px 0}
+  .ready-box .rb-ic{width:64px;height:64px;border-radius:50%;background:#e7f7f0;display:grid;place-items:center;font-size:31px;margin:0 auto 16px}
+  .ready-sum{text-align:left;background:#f6f8fc;border:1px solid var(--line);border-radius:14px;padding:16px;margin:18px 0}
+  .ready-sum .rs{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid var(--line)}
+  .ready-sum .rs:last-child{border-bottom:0}
+  .ready-sum .rs .k{color:var(--muted)}
+  .ready-sum .rs .v{font-weight:740}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="logo" onclick="showLanding()">
+      <span class="mark">✦</span> BlueStacks<small>SKILLS</small>
+    </div>
+    <label class="nav-search">
+      <span>🔍</span>
+      <input id="navSearch" placeholder="Search skills across all your apps…" oninput="onSearch(this.value)">
+    </label>
+    <nav class="nav-links">
+      <a style="cursor:pointer" onclick="showLanding()">Home</a>
+      <a style="cursor:pointer" onclick="showHome()">Browse skills</a>
+      <a style="cursor:pointer" onclick="showCreators()">For creators</a>
+      <a class="pill" onclick="showLanding()">Get Blue AI</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ LANDING (PRODUCT HOMEPAGE) ============ -->
+<main id="landing">
+  <section class="lp-hero">
+    <div class="wrap lp-hero-inner">
+      <div>
+        <span class="eyebrow">✦ Meet Blue AI</span>
+        <h1>An agent that actually <span class="grad">uses your phone</span> for you.</h1>
+        <p class="lede">Blue AI is a real agent - not a chatbot. Bring the LLM you trust, plug it into a battle-tested harness, connect a phone, and hand it the task. It taps, types and gets it done.</p>
+        <div class="lp-cta">
+          <button class="btn btn-primary" onclick="document.getElementById('intake').scrollIntoView({behavior:'smooth'})">What do you want to get done?</button>
+          <button class="btn btn-ghost" onclick="showHome()">Browse skills</button>
+        </div>
+        <div class="lp-meta">
+          <div><b>Any LLM</b>your choice</div>
+          <div><b>Proven harness</b>built for real apps</div>
+          <div><b>Virtual or real</b>phone, connected</div>
+        </div>
+      </div>
+      <div class="hero-mock">
+        <div class="hm-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ttl">Blue AI</span><span class="chipm">⚙ Claude · Virtual phone</span></div>
+        <div class="hm-body">
+          <div class="hm-u"><span>Find the cheapest WH-1000XM5 and watch the price</span></div>
+          <div class="hm-a"><div class="av">✦</div><div class="bub">
+            <div class="step"><span class="tick">✓</span> Opened Amazon, Flipkart, Croma on your phone</div>
+            <div class="step"><span class="tick">✓</span> Compared live prices across 3 apps</div>
+            <div class="step"><span class="tick">✓</span> Flagged a fake "limited deal"</div>
+            <div class="step"><span class="spin">●</span> Setting a price-drop watch…</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <!-- three pillars -->
+    <section class="section">
+      <div class="sec-head"><div><h2>What makes Blue AI different</h2><div class="sub">A real agent, on your terms.</div></div></div>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pi">🧠</div>
+          <h3>Your choice of LLM</h3>
+          <p>Blue AI isn't locked to one model. Bring the one you trust - for reasoning, speed or cost - and switch any time.</p>
+          <div class="models"><span>Claude</span><span>GPT</span><span>Gemini</span><span>Llama</span><span>+ more</span></div>
+        </div>
+        <div class="pillar">
+          <div class="pi">🛠️</div>
+          <h3>A proven agent harness</h3>
+          <p>Years of work on a reliable loop: it sees the screen, plans, acts, and recovers from errors - so it finishes real multi-step tasks, not just demos.</p>
+        </div>
+        <div class="pillar">
+          <div class="pi">📱</div>
+          <h3>Connect a phone</h3>
+          <p>Give the agent a device to work on. Spin up a virtual phone instantly, or bring your own.</p>
+          <div class="phones">
+            <div class="ph"><span class="ok">✓</span> Virtual phone - via BlueStacks <span class="soon">AVAILABLE</span></div>
+            <div class="ph"><span style="color:var(--muted)">○</span> Real phone - your own device <span class="soon">COMING SOON</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- intake / journey starter -->
+    <section class="section" id="intake">
+      <div class="intake">
+        <div class="glow"></div>
+        <h2>What are you looking to get done?</h2>
+        <p>Tell Blue AI the outcome you want. We'll set you up with the right skill and walk you through the rest.</p>
+        <div class="intake-box">
+          <input id="goalInput" placeholder="e.g. compare prices before I buy, catch up on my chats…" onkeydown="if(event.key==='Enter')startJourney(this.value)">
+          <button onclick="startJourney(document.getElementById('goalInput').value)">Get started →</button>
+        </div>
+        <div class="goal-chips" id="goalChips"></div>
+      </div>
+    </section>
+
+    <!-- how it works -->
+    <section class="section">
+      <div class="sec-head"><div><h2>How it works</h2><div class="sub">From idea to done in four steps.</div></div></div>
+      <div class="hiw">
+        <div class="h"><div class="ic">🎯</div><h4>Tell it your goal</h4><p>Say what you want to accomplish - we match the right skill.</p></div>
+        <div class="h"><div class="ic">🧠</div><h4>Pick your model</h4><p>Choose the LLM that powers the agent for this task.</p></div>
+        <div class="h"><div class="ic">🔑</div><h4>Log in</h4><p>Sign in so your skills and credits travel with you.</p></div>
+        <div class="h"><div class="ic">📱</div><h4>Connect a phone</h4><p>If the task needs a device, add a virtual or real phone - then go.</p></div>
+      </div>
+    </section>
+
+    <!-- closer -->
+    <section class="section">
+      <div class="closer">
+        <h2>Hand the busywork to Blue AI</h2>
+        <p>Pick a model, connect a phone, and let the agent do the tapping.</p>
+        <button class="btn-white" onclick="document.getElementById('intake').scrollIntoView({behavior:'smooth'})">Get started</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ HOME / MARKETPLACE ============ -->
+<main id="home">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">✦ Powered by BlueAI · works across every app on BlueStacks</span>
+      <h1>Skills that <span class="grad">do the thing</span> for you</h1>
+      <p>Don't learn another tool. Tell BlueAI the outcome you want - these skills handle the rest, right inside your apps.</p>
+      <div class="hero-search">
+        <input id="heroSearch" placeholder="What do you want done?  e.g. compare prices, redeem codes…" oninput="onSearch(this.value)">
+        <button onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Browse skills</button>
+      </div>
+      <div class="hero-stats">
+        <div><b id="statCount">27</b> skills live</div>
+        <div><b>8</b> categories</div>
+        <div><b>1-tap</b> install</div>
+        <div><b>300</b> free credits</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="cats" id="cats"></div>
+
+    <!-- featured -->
+    <section class="section" id="featuredSec">
+      <div class="sec-head">
+        <div><h2>Featured this week</h2><div class="sub">Hand-picked skills that deliver an outcome in seconds.</div></div>
+      </div>
+      <div class="feat-grid" id="featured"></div>
+    </section>
+
+    <!-- full catalog -->
+    <section class="section" id="catalog">
+      <div class="sec-head">
+        <div><h2 id="catalogTitle">All skills</h2><div class="sub" id="catalogSub">Every shortlisted skill, grouped by the outcome it delivers.</div></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" style="display:none">No skills match that yet - try another word.</div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ DETAIL ============ -->
+<main id="detail"><div class="wrap" id="detailInner"></div></main>
+
+<!-- ============ FOR CREATORS ============ -->
+<main id="creators">
+  <section class="cr-hero">
+    <div class="wrap">
+      <span class="eyebrow">✦ BlueStacks Creator Program</span>
+      <h1>Have a skill idea? <span class="grad">We'll fund it.</span></h1>
+      <p>Pitch a skill you'd love to build for BlueAI. If we love the idea, we hand you <b>5,000 free credits</b> to build it - and list it on BlueStacks.ai for everyone.</p>
+      <div class="credit-badge">🎁 <span><span class="big">5,000</span> free credits</span> to build your skill</div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="section">
+      <div class="sec-head"><div><h2>How it works</h2><div class="sub">From idea to a live, listed skill - in five steps.</div></div></div>
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-num">1</div>
+          <div class="tl-body"><h4>Share your idea</h4><p>Tell us the outcome your skill delivers and roughly how it'd work. Takes about two minutes - no code, no prototype needed yet.</p></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-num">2</div>
+          <div class="tl-body"><h4>We review it</h4><p>Our team reads every submission and looks for ideas that deliver real value to BlueStacks users. We'll get back to you either way.</p></div>
+        </div>
+        <div class="tl-step hot">
+          <div class="tl-num">3</div>
+          <div class="tl-body"><h4>Get 5,000 credits by email</h4><p>If we love the idea, you'll get an approval email from us with your free credits attached.</p>
+          <div class="note">⚠ Use the same email here that you'll log into BlueAI with - that's how your credits are matched.</div></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-num">4</div>
+          <div class="tl-body"><h4>Download BlueAI &amp; build</h4><p>Install BlueAI, log in with that same email to claim your 5,000 credits, and use them to build your skill.</p></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-num">5</div>
+          <div class="tl-body"><h4>Get listed on BlueStacks.ai</h4><p>Once it's ready, your skill goes live in the marketplace - discoverable by every BlueStacks user, with your name on it.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pitchForm">
+      <div class="form-card">
+        <h3>Pitch your skill</h3>
+        <div class="fc-sub">Lead with the outcome - what will a user get out of it?</div>
+        <form onsubmit="submitIdea(event)" novalidate>
+          <div class="field" id="f-name">
+            <label>Skill name / working title</label>
+            <input name="name" placeholder="e.g. Deal Hawk">
+          </div>
+          <div class="field" id="f-outcome">
+            <label>The outcome it delivers <span class="opt"> - in one line</span></label>
+            <input name="outcome" placeholder="e.g. Always buy at the lowest price">
+            <div class="hint">This is the headline users will see. Make it about the result, not the mechanics.</div>
+          </div>
+          <div class="row2">
+            <div class="field" id="f-cat">
+              <label>Category</label>
+              <select name="category"><option value="">Choose one…</option></select>
+            </div>
+            <div class="field" id="f-apps">
+              <label>Apps it works across <span class="opt">(optional)</span></label>
+              <input name="apps" placeholder="e.g. Amazon, Flipkart, Telegram">
+            </div>
+          </div>
+          <div class="field" id="f-how">
+            <label>How would it work?</label>
+            <textarea name="how" placeholder="Walk us through what the skill does, step by step."></textarea>
+          </div>
+          <div class="field" id="f-why">
+            <label>Who's it for &amp; why is it valuable? <span class="opt">(optional)</span></label>
+            <textarea name="why" placeholder="The problem it solves and who feels it most."></textarea>
+          </div>
+          <div class="row2">
+            <div class="field" id="f-creator">
+              <label>Your name</label>
+              <input name="creator" placeholder="Jane Doe">
+            </div>
+            <div class="field" id="f-email">
+              <label>Email</label>
+              <input name="email" type="email" placeholder="you@email.com">
+            </div>
+          </div>
+          <div class="email-note">⚠ <span>Use the email you'll log into <b>BlueAI</b> with. If your idea is approved, we send your 5,000 credits to this address and match them to that login.</span></div>
+          <button type="submit" class="submit-btn">Submit idea for review →</button>
+          <div class="form-foot">No payment, no commitment. We typically review within a few days.</div>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ JOURNEY MODAL ============ -->
+<div class="modal-bg" id="journey" onclick="if(event.target===this)closeJourney()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="logo" style="font-size:15px"><span class="mark" style="width:24px;height:24px;font-size:13px">✦</span> Blue AI</div>
+      <div class="stepdots" id="stepDots"></div>
+      <button class="x" onclick="closeJourney()">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<footer>BlueStacks.ai · Skill Marketplace concept - outcome-led layout · mockup populated with real hackathon submissions</footer>
+
+<script>
+/* ============ CATEGORY META ============ */
+const CATS = {
+  "Gaming":      {ico:"🎮", c:"#ede9fe", t:"#6d28d9"},
+  "Rewards":     {ico:"🎁", c:"#ffe9ec", t:"#e11d48"},
+  "Shopping":    {ico:"🛒", c:"#e7f7ee", t:"#059669"},
+  "Productivity":{ico:"⚡", c:"#fff3da", t:"#b45309"},
+  "Creator":     {ico:"📣", c:"#e6f0ff", t:"#2563ff"},
+  "Business":    {ico:"💼", c:"#e9eef5", t:"#334155"},
+  "Creative":    {ico:"🎨", c:"#fde9f6", t:"#be1e7a"},
+  "Wellbeing":   {ico:"🌿", c:"#e6f7f1", t:"#0d9488"},
+  "Developer":   {ico:"🧪", c:"#eef2ff", t:"#4338ca"}
+};
+const GRADS = ["linear-gradient(135deg,#2563ff,#7c5cff)","linear-gradient(135deg,#0ea5e9,#2563ff)","linear-gradient(135deg,#7c5cff,#be1e7a)","linear-gradient(135deg,#059669,#0ea5e9)","linear-gradient(135deg,#f59e0b,#ef4444)"];
+
+/* ============ SKILLS ============ */
+const SKILLS = [
+{id:"deal-hawk",name:"Deal Hawk",creator:"Pragya Singhal",cat:"Shopping",ico:"🦅",featured:1,grad:0,rating:4.9,installs:"3.2k",
+ outcome:"Always buy at the lowest price",
+ mech:"Compares prices across 9+ Indian shopping & quick-commerce apps, spots fake discounts, and watches your wishlist - no APIs, pure on-screen automation.",
+ lede:"Tell BlueAI what you're buying. Deal Hawk checks Amazon, Flipkart, Blinkit, Zepto and more, flags fake 'discounts', and tells you exactly where it's cheapest.",
+ apps:["Amazon","Flipkart","Blinkit","Zepto","Telegram"],credits:"~6 / search",
+ perms:["Read product pages in your shopping apps","Send you a price summary","Never makes a purchase - you tap buy"],
+ example:{cmd:"compare price for Sony WH-1000XM5",type:"list",title:"Cheapest right now: Flipkart",
+   rows:[["Flipkart","₹24,990 ✓ best","b"],["Amazon","₹26,499",""],["Croma","₹27,990",""],["⚠ 'Limited deal'","actually +₹1,500 vs last week","g"]],tag:"Saved you ₹1,509"},
+ whatYouGet:[{ico:"💸",h:"The real lowest price",p:"Side-by-side across every app you shop on, in one reply."},{ico:"🕵️",h:"Fake-discount detector",p:"Flags inflated MRPs and fake 'limited' deals before you buy."},{ico:"🔔",h:"Watchlist tracking",p:"Add items and get told when they actually drop."}],
+ steps:[{h:"Name the product",p:"Type or paste what you want to buy."},{h:"BlueAI checks every app",p:"Opens each store on-screen and reads live prices."},{h:"Buy at the best price",p:"You get a ranked list with the direct link."}]},
+
+{id:"tldr",name:"tldr",creator:"Taroon Tyagi",cat:"Productivity",ico:"💬",featured:1,grad:1,rating:4.8,installs:"5.1k",
+ outcome:"Catch up on every chat in 30 seconds",
+ mech:"Scans unread messages across WhatsApp, Telegram, Signal, Messenger & Instagram and surfaces only what needs you - with ready-to-send draft replies.",
+ lede:"Drowning in unread chats? tldr reads them all, filters the banter, and hands you the tasks, decisions and direct asks - plus a draft reply you can fire off.",
+ apps:["WhatsApp","Telegram","Signal","Messenger","Instagram"],credits:"~5 / sweep",
+ perms:["Read your unread chats on-screen","Draft replies for your approval","Light mode triggers zero read receipts"],
+ example:{cmd:"tldr all",type:"list",title:"3 things need you",
+   rows:[["Mom","Asked if you're home for dinner Sun","b"],["Work group","Deadline moved to Thu - confirm","b"],["Rahul","Wants the file you promised","b"],["Drafted 3 replies","tap to review & send","g"]],tag:"Skipped 41 low-priority msgs"},
+ whatYouGet:[{ico:"🎯",h:"Only what matters",p:"Tasks, decisions and direct asks - banter filtered out."},{ico:"✍️",h:"Ready-to-send drafts",p:"Each thread comes with a reply you can approve in a tap."},{ico:"🤫",h:"Zero read receipts",p:"Light mode previews from inbox snippets - nobody sees 'read'."}],
+ steps:[{h:"Say 'tldr all'",p:"Or name one app, e.g. 'tldr WhatsApp'."},{h:"It reads your unreads",p:"Across every supported messenger at once."},{h:"Review & send",p:"Skim the summary, approve the drafts you like."}]},
+
+{id:"quest-guide",name:"Quest Guide",creator:"Umang Srivastava",cat:"Gaming",ico:"🧭",featured:1,grad:2,rating:4.7,installs:"2.4k",
+ outcome:"Never get stuck on a quest again",
+ mech:"Searches any quest, reads the AI overview and best guide site, pulls the top Reddit tip, and hands you a 3-line strategy - without leaving your game.",
+ lede:"Stuck on a mission? Name it. Quest Guide finds the best walkthrough and the top Reddit tip, then gives you a clean 3-line strategy and the direct link.",
+ apps:["Chrome","Reddit","Google"],credits:"~4 / quest",
+ perms:["Open Chrome and search the quest","Read guide pages & Reddit","Returns a summary - you stay in the game"],
+ example:{cmd:"how do I beat the Pyro Hypostasis",type:"list",title:"Pyro Hypostasis - quick strategy",
+   rows:[["1.","Bring Hydro or Cryo to break its shield","b"],["2.","Destroy all 3 pillars in the regen phase","b"],["3.","Dodge the homing flames - don't greed hits",""],["Top Reddit tip","'Xingqiu trivializes the regen' →","g"]],tag:"Pulled from Game8 + r/Genshin"},
+ whatYouGet:[{ico:"⚡",h:"Unstuck in seconds",p:"A 3-line strategy instead of a 12-minute video."},{ico:"🔗",h:"Best source, direct link",p:"Jumps straight to the walkthrough section."},{ico:"🧠",h:"Real player tips",p:"The top community post, not generic filler."}],
+ steps:[{h:"Name the quest",p:"Type the boss, mission or puzzle you're stuck on."},{h:"BlueAI researches it",p:"Reads the best guide site and top Reddit thread."},{h:"Get the play",p:"A tight strategy summary with the link to go deeper."}]},
+
+{id:"game-search",name:"Game Search",creator:"Mark, Leon & Yao",cat:"Gaming",ico:"🔎",rating:4.5,installs:"1.6k",
+ outcome:"Instant guides for any game you play",
+ mech:"A universal game companion - strategies, full stage guides, community threads and video info for any game, while you play.",
+ lede:"Not built for one game - works for all of them. Ask anything about the stage you're on and get strategies, guides and the latest community intel in real time.",
+ apps:["Chrome","YouTube","Reddit"],credits:"~4 / query",
+ perms:["Search the web for game info","Read guides, forums & video pages","Answers in chat alongside your game"],
+ example:{cmd:"best team for stage 9-3",type:"list",title:"Stage 9-3 - recommended approach",
+   rows:[["Meta team","DPS + healer + 2 shielders","b"],["Watch out","AoE on turn 3 - spread units",""],["Community","'F2P clear' thread (124 upvotes) →","g"]],tag:"Works for any installed game"},
+ whatYouGet:[{ico:"🌐",h:"Any game, one skill",p:"No per-game setup - ask about whatever you're playing."},{ico:"📚",h:"Deep or quick",p:"Beginner tips or full stage breakdowns on demand."},{ico:"🕒",h:"Live info",p:"Latest forum and video intel, not stale wikis."}],
+ steps:[{h:"Ask while you play",p:"Type your question about the current stage."},{h:"It gathers intel",p:"Guides, forums and videos, filtered for relevance."},{h:"Play smarter",p:"Get the answer without alt-tabbing away."}]},
+
+{id:"game-intel",name:"Game Intel",creator:"Idle Hands",cat:"Gaming",ico:"📊",rating:4.6,installs:"980",
+ outcome:"A one-page brief on any mobile game",
+ mech:"Combines Medium long-form, Game8/GameWith/Fandom and recent patch notes into a single intel brief - saved as a PDF.",
+ lede:"Deciding whether to start a game, or catching up on the meta? Game Intel reads the deep articles, the guides and the latest patch, then hands you one clean page.",
+ apps:["Chrome","Medium","Game8"],credits:"~8 / brief",
+ perms:["Research across guide & article sites","Generate a PDF to Downloads","Opens the brief for you automatically"],
+ example:{cmd:"intel brief on Wuthering Waves",type:"list",title:"Wuthering Waves - intel brief.pdf",
+   rows:[["Meta read","Strong launch, combat-heavy","b"],["Latest patch","1.2 added co-op + new region",""],["Verdict","Great for action fans, grindy endgame","g"]],tag:"Saved to Downloads/GameIntel"},
+ whatYouGet:[{ico:"📄",h:"One page, everything",p:"Design analysis, tier lists and patch notes merged."},{ico:"🎯",h:"Intent-aware",p:"Deep dive, meta check or decision support - it adapts."},{ico:"💾",h:"Keepable PDF",p:"Saved and opened automatically when it's ready."}],
+ steps:[{h:"Name the game",p:"Plus how deep you want to go."},{h:"It reads everything",p:"Long-form + guides + recent patches."},{h:"Get the brief",p:"A tidy PDF, opened the moment it's done."}]},
+
+{id:"event-radar",name:"Event Radar",creator:"Solo",cat:"Gaming",ico:"📡",rating:4.7,installs:"1.3k",
+ outcome:"Never miss a limited-time event",
+ mech:"One digest of every time-limited event across all your installed games, sorted by urgency - ends today, this week, or later.",
+ lede:"Checking 5 games a day for events is a chore. Event Radar scans them all in 30 seconds and tells you what's actually worth logging in for, ranked by urgency.",
+ apps:["Multiple games","Discord","WhatsApp"],credits:"~7 / scan",
+ perms:["Open your installed games to read events","Summarise into one digest","Optional: share digest via Android share sheet"],
+ example:{cmd:"what events are ending soon",type:"list",title:"Across 6 installed games",
+   rows:[["⏰ Ends today","Genshin banner - last 6h","b"],["This week","AFK Arena 2x drops (3d)",""],["This week","Clash event shop resets (5d)",""],["Later","Summoners War guild war",""]],tag:"Scanned 6 games in 28s"},
+ whatYouGet:[{ico:"📡",h:"Every game at once",p:"No more opening five apps to check what's live."},{ico:"⏰",h:"Sorted by urgency",p:"'Ends today' floats to the top so you act in time."},{ico:"📤",h:"Shareable",p:"Send the digest to your guild on Discord or WhatsApp."}],
+ steps:[{h:"Run a scan",p:"Ask what's worth playing right now."},{h:"It checks each game",p:"Smart limits keep credit use low."},{h:"Log in with purpose",p:"A ranked digest of what's ending and when."}]},
+
+{id:"daily-games",name:"Daily Games Routine",creator:"Ashish Pathak",cat:"Gaming",ico:"🌙",rating:4.8,installs:"2.0k",
+ outcome:"Your dailies, done while you sleep",
+ mech:"One profile-driven skill runs the free daily routine across Whiteout Survival, Evony, RAID, Summoners War and Roblox titles. Never spends real money.",
+ lede:"Nightly chores across six games, automated. Claims logins, mail, missions and resources, runs one safe loop per game, and never touches premium currency.",
+ apps:["Whiteout","Evony","RAID","Summoners War","Roblox"],credits:"~10 / night",
+ perms:["Play free daily routines in supported games","Never spends real money or premium currency","Reports a per-account digest"],
+ example:{cmd:"run my game dailies",type:"list",title:"Nightly routine - 5 games done",
+   rows:[["Whiteout Survival","login + mail + missions ✓","g"],["RAID","daily clears + quests ✓","g"],["Summoners War","energy spent, mail claimed ✓","g"],["Spend guard","0 premium currency used","b"]],tag:"All free rewards collected"},
+ whatYouGet:[{ico:"😴",h:"Set it and forget it",p:"Wake up to every daily already claimed."},{ico:"🛡️",h:"Spend-safe",p:"Hard rule: never real money, never premium currency."},{ico:"🎮",h:"Six games, one skill",p:"Per-game profiles keep each routine correct."}],
+ steps:[{h:"Pick your games",p:"It resolves a profile for each supported title."},{h:"It runs the loop",p:"Login, mail, missions, one safe auto-battle."},{h:"Read the digest",p:"A per-account summary of what was collected."}]},
+
+{id:"giftcode-whiteout",name:"Gift Code Redeemer - Whiteout",creator:"Michael Guo",cat:"Rewards",ico:"🎁",rating:4.6,installs:"1.1k",
+ outcome:"Free rewards, claimed automatically",
+ mech:"Scrapes all available gift codes from the official Whiteout Survival Twitter and redeems them in-game for you.",
+ lede:"Devs drop codes on Twitter and they expire fast. This skill grabs every active Whiteout Survival code and redeems it in-game - no copy-paste, no missed freebies.",
+ apps:["Twitter/X","Whiteout Survival"],credits:"~3 / run",
+ perms:["Read the official game Twitter","Enter codes in the in-game redeem screen","Reports what was redeemed"],
+ example:{cmd:"redeem latest Whiteout codes",type:"list",title:"4 codes redeemed",
+   rows:[["WOS2026","100 gems + speedups ✓","g"],["FROST500","resource pack ✓","g"],["WINTERX","hero shards ✓","g"],["1 expired","skipped automatically",""]],tag:"Rewards in your in-game mail"},
+ whatYouGet:[{ico:"🎁",h:"Never miss a freebie",p:"Every active code, claimed before it expires."},{ico:"⚡",h:"Zero copy-paste",p:"Reads Twitter and types codes for you."},{ico:"📜",h:"Clear report",p:"See exactly what landed in your mailbox."}],
+ steps:[{h:"Ask to redeem",p:"One command kicks off the run."},{h:"It reads the codes",p:"Straight from the official Twitter feed."},{h:"Rewards claimed",p:"Codes entered in-game, summary returned."}]},
+
+{id:"giftcode-universal",name:"Universal Gift Code Redeemer",creator:"Deepika Sharma",cat:"Rewards",ico:"🔑",rating:4.7,installs:"1.9k",
+ outcome:"Every game's gift codes, auto-redeemed",
+ mech:"Detects your installed games, finds codes from trusted sources, redeems via in-game or web portals, and remembers what's already used.",
+ lede:"Not just one game - all of them. It finds active codes for every game you have installed, redeems them, and never wastes a run on a used or invalid code.",
+ apps:["Multiple games","Chrome"],credits:"~5 / run",
+ perms:["Detect installed games","Redeem via in-game or official web portals","Remembers used codes to avoid repeats"],
+ example:{cmd:"redeem all available game codes",type:"list",title:"Across 3 installed games",
+   rows:[["Whiteout Survival","2 new codes ✓","g"],["Genshin Impact","1 new code ✓","g"],["AFK Journey","up to date - skipped",""],["Memory","6 used codes ignored","b"]],tag:"No invalid codes retried"},
+ whatYouGet:[{ico:"🎮",h:"All games covered",p:"Auto-detects what you have installed."},{ico:"🧠",h:"Remembers history",p:"Won't waste credits on used or dead codes."},{ico:"🛟",h:"Handles edge cases",p:"Cooldowns and UI hiccups managed safely."}],
+ steps:[{h:"Run it",p:"One command sweeps every installed game."},{h:"Finds & redeems",p:"Trusted sources, in-game and web portals."},{h:"Get a report",p:"Simple redemption summary per game."}]},
+
+{id:"deal-keeper",name:"Deal Keeper",creator:"Saumitra Dubey",cat:"Shopping",ico:"🔔",rating:4.6,installs:"1.4k",
+ outcome:"Get pinged the moment prices drop",
+ mech:"Track any product with a target price and get alerted when it hits. Visual price history, Amazon vs Flipkart side-by-side, and one-tap wishlist sharing.",
+ lede:"Set a target price and walk away. Deal Keeper watches it, shows you the full price history, and pings you the moment it's worth buying.",
+ apps:["Amazon","Flipkart","Myntra","BuyHatke","WhatsApp"],credits:"~4 / item",
+ perms:["Track product prices over time","Read your saved wishlists","Alert you - never auto-buys"],
+ example:{cmd:"alert me when this drops below ₹40,000",type:"list",title:"Tracking: iPhone 15",
+   rows:[["Target","₹40,000","b"],["Now","₹42,990 (watching)",""],["History","lowest ever ₹39,900 ·  Oct","g"],["Alert","WhatsApp + chat when it hits","b"]],tag:"You'll know first"},
+ whatYouGet:[{ico:"🎯",h:"Target-price alerts",p:"Named your price - get told the instant it's met."},{ico:"📉",h:"Visual history",p:"See if today's 'deal' is actually a deal."},{ico:"📤",h:"Wishlist sharing",p:"Pull saved lists and share in one step."}],
+ steps:[{h:"Set your target",p:"Track any product at the price you'd pay."},{h:"It watches",p:"Price history via BuyHatke, cross-store compare."},{h:"Get the ping",p:"Alerted on WhatsApp the moment it drops."}]},
+
+{id:"shop-assistant",name:"E-commerce Shopping Assistant",creator:"Ashish Pathak",cat:"Shopping",ico:"🛍️",rating:4.5,installs:"870",
+ outcome:"Skip the fake reviews, buy with confidence",
+ mech:"Searches Amazon and local stores, compares the top candidates, reads verified reviews to surface real failure modes, and returns a ranked pick.",
+ lede:"47 pages of reviews, fake 5-stars on top, real complaints buried deep. This reads them for you and tells you what actually breaks - then names the one to buy.",
+ apps:["Amazon","Local stores"],credits:"~7 / search",
+ perms:["Search and compare products","Read verified reviews","Returns a recommendation with buy link"],
+ example:{cmd:"best budget air fryer under $80",type:"list",title:"Ranked pick: Instant Vortex 4Qt",
+   rows:[["Why","Most consistent, no coating complaints","b"],["Avoid","#2 - 'basket peels after 3mo' (verified)",""],["Real praise","'quiet + fast' across 40+ reviews","g"]],tag:"Read 200+ reviews for you"},
+ whatYouGet:[{ico:"🔍",h:"Real-world truth",p:"Surfaces the failure modes buried on page 10."},{ico:"⚖️",h:"True comparison",p:"Top candidates side by side, not just star counts."},{ico:"✅",h:"One clear pick",p:"A ranked recommendation with the buy link."}],
+ steps:[{h:"Describe what you want",p:"Budget, use case, must-haves."},{h:"It reads the reviews",p:"Verified ones, across every candidate."},{h:"Buy the right one",p:"Ranked rec with the direct link."}]},
+
+{id:"life-autopilot",name:"Life Autopilot 3.0",creator:"Ayush Kumar Singh",cat:"Productivity",ico:"🤖",rating:4.7,installs:"2.6k",
+ outcome:"One briefing instead of 100 notifications",
+ mech:"Manages daily routines, triages notifications and gives you a daily briefing - with live package, food and cab tracking, and YouTube Watch Later reminders.",
+ lede:"Digital clutter, handled. Life Autopilot triages the noise, tracks your deliveries and rides, and hands you one calm briefing of what actually needs you today.",
+ apps:["Android notifications","Maps","YouTube","Food apps"],credits:"~6 / briefing",
+ perms:["Read and triage notifications","Track orders & deliveries","Daily summary - you stay in control"],
+ example:{cmd:"my morning briefing",type:"list",title:"Today, at a glance",
+   rows:[["📦 Amazon","Out for delivery - by 2pm","b"],["🍱 Lunch order","Arriving 12:40",""],["🎬 Watch Later","3 videos saved 'for weekend'","g"],["Noise filtered","37 low-priority notifications","b"]],tag:"Nothing important missed"},
+ whatYouGet:[{ico:"🔕",h:"Notification triage",p:"The important few, the noise filtered out."},{ico:"📦",h:"Live tracking",p:"Packages, food and cabs in one place."},{ico:"☀️",h:"Daily briefing",p:"A single calm summary to start the day."}],
+ steps:[{h:"Set your routines",p:"Tell it what you care about."},{h:"It watches all day",p:"Triaging notifications and tracking orders."},{h:"Get your briefing",p:"One digest, with smart fallbacks for limits."}]},
+
+{id:"dossier",name:"Dossier",creator:"Akshit Pradhan",cat:"Productivity",ico:"🗞️",rating:4.6,installs:"1.2k",
+ outcome:"Follow people, not feeds",
+ mech:"A daily digest of the creators, founders and experts you actually care about - checking their YouTube and blogs, distilled to one 30-second read.",
+ lede:"Pick the handful of people worth following. Dossier checks what each posted this week and replaces an hour of scrolling with one clean 30-second read.",
+ apps:["YouTube","Blogs/RSS","Chrome"],credits:"~5 / digest",
+ perms:["Check your chosen creators' posts","Summarise into a digest","Runs unattended on your instance"],
+ example:{cmd:"my Dossier for today",type:"list",title:"5 people you follow",
+   rows:[["Lenny","New post: pricing teardown","b"],["MKBHD","Reviewed the new foldable",""],["Naval","Podcast clip on leverage","g"],["2 others","quiet this week",""]],tag:"~1h of scrolling → 30s"},
+ whatYouGet:[{ico:"👤",h:"People, not algorithms",p:"You choose exactly who it follows."},{ico:"⏱️",h:"30-second read",p:"A week of posts, distilled to the essentials."},{ico:"🤖",h:"Runs itself",p:"Unattended on your instance, daily."}],
+ steps:[{h:"List your people",p:"Creators, founders, experts you trust."},{h:"It checks weekly",p:"Their YouTube and blogs, every day."},{h:"Read the digest",p:"One clean summary of only your picks."}]},
+
+{id:"reddit-karma",name:"Reddit Karma & Research",creator:"Ashish Pathak",cat:"Creator",ico:"🧡",rating:4.5,installs:"1.5k",
+ outcome:"Grow real Reddit karma, on autopilot",
+ mech:"Browses your target subreddits, finds high-value comment opportunities that match your persona and the rules, and drafts contextual replies for approval.",
+ lede:"Real karma comes from real contribution. This finds the threads where your take adds value, drafts a reply in your voice, and waits for your approval before posting.",
+ apps:["Reddit","Chrome"],credits:"~6 / round",
+ perms:["Browse your chosen subreddits","Draft replies matching your persona","Posts only after you approve"],
+ example:{cmd:"find comment opportunities in r/SaaS",type:"list",title:"3 high-value threads",
+   rows:[["'How to price a beta?'","draft ready - your pricing take","b"],["'Churn at 8%'","draft ready - retention angle","b"],["Competitor intel","2 migration-signal threads","g"]],tag:"You approve before anything posts"},
+ whatYouGet:[{ico:"🎯",h:"Right threads only",p:"Matches your persona and each subreddit's rules."},{ico:"✍️",h:"Drafts in your voice",p:"Contextual replies, never generic spam."},{ico:"🛰️",h:"Competitor intel",p:"Surfaces migration-signal threads worth watching."}],
+ steps:[{h:"Pick subreddits",p:"And the persona you post as."},{h:"It scouts",p:"Finds 1-3 high-value comment spots."},{h:"Approve & post",p:"Review the drafts, post the ones you like."}]},
+
+{id:"discord-presence",name:"Discord Community Presence",creator:"Ashish Pathak",cat:"Creator",ico:"🎧",rating:4.4,installs:"760",
+ outcome:"Be present in every server at once",
+ mech:"Reads activity across your Discord servers, finds threads where you can add value, and drafts culture-matched replies queued for your approval.",
+ lede:"Running multiple communities? This keeps your voice consistent - reading each server, finding where you're needed, and drafting replies that fit the room.",
+ apps:["Discord"],credits:"~5 / server",
+ perms:["Read activity in your chosen servers","Draft culture-matched replies","Queues for approval - never auto-sends"],
+ example:{cmd:"where am I needed across my servers",type:"list",title:"3 servers scanned",
+   rows:[["#support","2 unanswered Qs - drafts ready","b"],["#general","welcome 4 new members","g"],["#feedback","a bug report worth a reply","b"]],tag:"Per-server voice kept consistent"},
+ whatYouGet:[{ico:"🎙️",h:"Consistent voice",p:"Matches each server's culture and your tone."},{ico:"🧵",h:"Finds the threads",p:"Spots where a reply actually adds value."},{ico:"✅",h:"You approve",p:"Everything queues before it sends."}],
+ steps:[{h:"Choose servers",p:"And the channels that matter."},{h:"It reads activity",p:"Finds high-value threads to join."},{h:"Approve replies",p:"Culture-matched drafts, sent on your nod."}]},
+
+{id:"twitter-arbitrage",name:"Twitter Content Arbitrage",creator:"Ashish Pathak",cat:"Creator",ico:"🐦",rating:4.5,installs:"1.1k",
+ outcome:"Turn top Reddit posts into X threads",
+ mech:"Finds high-performing Reddit posts in your niche, restructures them into X-native formats, and posts on a paced schedule built for impressions.",
+ lede:"Proven Reddit content is a goldmine for X. This finds what's already working in your niche and reshapes it into tweets, threads and quote cards - paced for reach.",
+ apps:["Reddit","Twitter/X"],credits:"~6 / batch",
+ perms:["Read top posts in your niche","Draft X-native formats","Posts on a schedule you approve"],
+ example:{cmd:"make X content from r/startups this week",type:"list",title:"3 drafts queued",
+   rows:[["Thread","'9 lessons from a failed launch'","b"],["Single","punchy stat + hot take",""],["Quote card","founder quote, designed","g"]],tag:"Paced for impressions"},
+ whatYouGet:[{ico:"⛏️",h:"Proven source",p:"Starts from posts that already performed."},{ico:"🧵",h:"X-native formats",p:"Threads, singles and quote cards, not copy-paste."},{ico:"📅",h:"Paced posting",p:"Scheduled to maximise impressions."}],
+ steps:[{h:"Set your niche",p:"And the subreddits to mine."},{h:"It restructures",p:"Top posts → X-native drafts."},{h:"Approve the schedule",p:"Posts roll out at the right pace."}]},
+
+{id:"medium-publisher",name:"Medium Authority Publisher",creator:"Ashish Pathak",cat:"Creator",ico:"✍️",rating:4.4,installs:"640",
+ outcome:"Publish long-form in your voice, weekly",
+ mech:"Researches a topic in your lane, drafts a long-form article in your voice with examples and references, and publishes to Medium after your approval.",
+ lede:"Authority needs cadence. This researches your topic, writes a full article that sounds like you - with examples and references - and publishes once you sign off.",
+ apps:["Medium","Chrome"],credits:"~9 / article",
+ perms:["Research your topic","Draft long-form in your voice","Publishes only after approval"],
+ example:{cmd:"draft a Medium piece on RAG pitfalls",type:"list",title:"Draft ready: 1,400 words",
+   rows:[["Angle","5 RAG mistakes & fixes","b"],["Includes","2 examples + 4 references","g"],["Voice","matched to your past posts",""],["Next","review → publish on approval","b"]],tag:"Authority on a schedule"},
+ whatYouGet:[{ico:"🔬",h:"Researched",p:"Grounded in your authority lane with references."},{ico:"🗣️",h:"Your voice",p:"Reads like you wrote it, examples included."},{ico:"📤",h:"Approval gated",p:"Nothing publishes without your sign-off."}],
+ steps:[{h:"Give a topic",p:"Within your area of authority."},{h:"It writes",p:"Long-form draft with examples and refs."},{h:"Approve & publish",p:"Goes live on Medium on your nod."}]},
+
+{id:"instagram-trends",name:"Instagram Trend Research",creator:"Ashish Pathak",cat:"Creator",ico:"📈",rating:4.6,installs:"1.7k",
+ outcome:"Know what's trending before you post",
+ mech:"Browses Reels in your niche, identifies trending formats, hooks, audio and posting cadence, and produces a weekly what's-working report.",
+ lede:"Stop guessing what to post. This studies the Reels winning in your niche right now - formats, hooks, audio, cadence - and hands you a weekly playbook.",
+ apps:["Instagram"],credits:"~7 / report",
+ perms:["Browse Reels in your niche","Analyse trends & cadence","Returns a research report"],
+ example:{cmd:"what's trending in fitness Reels",type:"list",title:"This week's playbook",
+   rows:[["Format","'3 mistakes' talking-head","b"],["Hook","first 1s = bold claim",""],["Audio","2 trending sounds rising","g"],["Cadence","best posts: 6-8pm","b"]],tag:"Plan your week in 2 min"},
+ whatYouGet:[{ico:"📈",h:"Trends, decoded",p:"Formats, hooks and audio that are working now."},{ico:"⏰",h:"Best cadence",p:"When your niche actually gets reach."},{ico:"🗂️",h:"Weekly report",p:"A plannable playbook, not a vague vibe."}],
+ steps:[{h:"Set your niche",p:"The lane you create in."},{h:"It studies Reels",p:"What's winning this week, and why."},{h:"Get the playbook",p:"A report you can plan content from."}]},
+
+{id:"pinterest-pins",name:"Pinterest Knowledge Pins",creator:"Ashish Pathak",cat:"Creator",ico:"📌",rating:4.3,installs:"520",
+ outcome:"SEO infographics, made and posted",
+ mech:"Generates knowledge-pin infographics, uploads them to the right board, and writes SEO-aware pin descriptions - for steady search reach.",
+ lede:"Pinterest is search, not social. This makes knowledge-pin infographics, posts them to the right board, and writes the SEO descriptions that pull traffic for months.",
+ apps:["Pinterest"],credits:"~6 / pin",
+ perms:["Generate infographics","Upload to the right board","Write SEO descriptions"],
+ example:{cmd:"make a knowledge pin on email subject lines",type:"list",title:"Pin created & posted",
+   rows:[["Format","checklist infographic","b"],["Board","'Marketing tips' ✓","g"],["Description","SEO-tuned, 3 keywords",""]],tag:"Built for long-tail search"},
+ whatYouGet:[{ico:"🎨",h:"Made for you",p:"Definitions, frameworks, checklists as clean pins."},{ico:"🗂️",h:"Right board",p:"Posted where it'll actually get found."},{ico:"🔎",h:"SEO descriptions",p:"Written to rank in Pinterest search."}],
+ steps:[{h:"Give a topic",p:"In your niche."},{h:"It designs the pin",p:"Infographic + SEO description."},{h:"Posted",p:"To the correct board automatically."}]},
+
+{id:"ig-reshaper",name:"Instagram Feed Reshaper",creator:"BlueDev",cat:"Creator",ico:"🎛️",rating:4.7,installs:"2.2k",
+ outcome:"Retrain your Reels feed to what you want",
+ mech:"Reshapes your Reels recommendations toward a topic using the real engagement signals the algorithm weights - and scores how much the feed actually shifted.",
+ lede:"Your feed feels stuck on the wrong stuff. Tell it the topic you want more of - it spends ~10 minutes sending the signals Instagram listens to, and proves the shift with a score.",
+ apps:["Instagram"],credits:"~8 / run",
+ perms:["Interact with Reels on your behalf","Use watch-time, Like, Save, Interested signals","Reports a measurable match-rate score"],
+ example:{cmd:"make my feed more about home cooking",type:"list",title:"Feed reshaped (~10 min)",
+   rows:[["Before","18% on-topic","b"],["After","71% on-topic","g"],["Signals used","watch-time, Save, Interested",""]],tag:"+53% match rate, verified"},
+ whatYouGet:[{ico:"🎛️",h:"You pick the topic",p:"Steer the algorithm instead of fighting it."},{ico:"📊",h:"Proven shift",p:"A match-rate score shows it actually worked."},{ico:"🤫",h:"Real signals",p:"Uses the same levers the feed already weights."}],
+ steps:[{h:"Name the topic",p:"What you want more of."},{h:"It sends signals",p:"~10 minutes of real engagement."},{h:"See the score",p:"Before/after match rate proves the change."}]},
+
+{id:"stream-coop",name:"Stream-Play CoOp",creator:"Samyak, Abhisht & Harsh",cat:"Creator",ico:"🕹️",rating:4.5,installs:"430",
+ outcome:"Let your chat play the game with you",
+ mech:"Links a turn-based game to your chat, parses the audience's most popular move in real time, and executes it - so viewers become co-op players.",
+ lede:"Turn streaming into a shared arena. Your chat votes the next move, the skill reads the room and plays it - you and your community alternate turns in real time.",
+ apps:["Google Chat","Turn-based games"],credits:"~7 / session",
+ perms:["Read live chat messages","Execute the crowd's chosen move","Needs Google Chat read scope"],
+ example:{cmd:"start co-op chess with my chat",type:"list",title:"Chat is playing",
+   rows:[["Chat's turn","42% voted Nf3","b"],["Executed","Nf3 played ✓","g"],["Your turn","make your move",""]],tag:"Viewers → co-op players"},
+ whatYouGet:[{ico:"🗳️",h:"Crowd-sourced moves",p:"Parses chat for the most popular choice."},{ico:"🤝",h:"Alternating turns",p:"You and the audience share the driver's seat."},{ico:"🎮",h:"Platform-agnostic",p:"Works with any turn-based game."}],
+ steps:[{h:"Connect chat",p:"Link your stream's chat client."},{h:"Chat votes",p:"It tallies the popular move live."},{h:"It plays",p:"Executes the crowd's choice on their turn."}]},
+
+{id:"vyapaar",name:"Vyapaar Autopilot",creator:"Ayush Kumar Singh",cat:"Business",ico:"🧾",rating:4.8,installs:"1.8k",
+ outcome:"Run your whole shop from your chats",
+ mech:"Connects WhatsApp, Telegram, Google Messages and Khatabook - scrapes orders, generates UPI invoice QR cards, verifies bank SMS, and logs to your ledger.",
+ lede:"For the WhatsApp-run business. Vyapaar reads incoming orders, makes the UPI invoice, confirms the payment from your bank SMS, and writes it into Khatabook - automatically.",
+ apps:["WhatsApp","Telegram","Khatabook","UPI"],credits:"~8 / order",
+ perms:["Read incoming order messages","Generate invoice QR cards","Verify bank SMS & log to ledger"],
+ example:{cmd:"process today's orders",type:"list",title:"4 orders handled",
+   rows:[["Order #112","invoice QR sent ✓","g"],["Payment","₹1,250 verified via SMS ✓","g"],["Khatabook","logged to ledger ✓","b"],["Thank-you","dispatch note sent",""]],tag:"Books reconciled automatically"},
+ whatYouGet:[{ico:"🧾",h:"Invoices, instant",p:"Custom UPI QR cards from a text order."},{ico:"🏦",h:"Payment verified",p:"Reads bank SMS so you know it cleared."},{ico:"📒",h:"Ledger updated",p:"Every transaction written to Khatabook."}],
+ steps:[{h:"Order comes in",p:"On WhatsApp, Telegram or Messages."},{h:"It invoices & verifies",p:"QR card out, bank SMS checked."},{h:"Books updated",p:"Logged to Khatabook, thank-you sent."}]},
+
+{id:"upwork-bidder",name:"Upwork Job Bidder",creator:"Ashish Pathak",cat:"Business",ico:"💼",rating:4.4,installs:"690",
+ outcome:"Win more gigs, spend fewer Connects",
+ mech:"Hunts new Upwork postings that match your profile, scores each on fit and competition, and drafts a personalized proposal - respecting your daily Connects budget.",
+ lede:"Stop blowing Connects on weak fits. This finds the postings worth bidding on, scores fit vs competition, and drafts a tailored proposal for you to send.",
+ apps:["Upwork","Chrome"],credits:"~6 / round",
+ perms:["Scan new Upwork postings","Score fit & draft proposals","Respects your Connects budget"],
+ example:{cmd:"find Upwork gigs for my profile",type:"list",title:"3 worth bidding",
+   rows:[["React dashboard","fit 92% · low comp","b"],["API integration","fit 85% · medium","g"],["Skip","2 low-fit postings",""],["Proposals","drafted, ready to send",""]],tag:"Connects spent only on strong fits"},
+ whatYouGet:[{ico:"🎯",h:"Fit scoring",p:"Each posting rated on match and competition."},{ico:"✍️",h:"Tailored proposals",p:"Personalized drafts, not templates."},{ico:"💰",h:"Budget-aware",p:"Respects your daily Connects limit."}],
+ steps:[{h:"Set your profile",p:"Skills and the work you want."},{h:"It hunts & scores",p:"New postings ranked by fit."},{h:"Send proposals",p:"Review the drafts and bid."}]},
+
+{id:"pixel-forge",name:"Pixel Forge",creator:"Saumitra Dubey",cat:"Creative",ico:"🎨",rating:4.7,installs:"2.1k",
+ outcome:"Generate images inside BlueAI in a minute",
+ mech:"AI image generation with no browser, no API key, no app switching. Refines your prompt, picks the right FLUX model and size, and saves to Media Manager.",
+ lede:"No browser, no API key, no app-hopping. Describe what you want - Pixel Forge refines the prompt, picks the model, and drops the image straight into Media Manager.",
+ apps:["BlueStacks Media Manager"],credits:"~5 / image",
+ perms:["Generate images via FLUX","Save to Media Manager","Re-rolls & variants built in"],
+ example:{cmd:"a cozy reading nook, warm light, isometric",type:"text",title:"Image ready",
+   text:"Prompt refined → FLUX-dev chosen → 1024×1024 rendered → saved to Media Manager. Re-roll, make variants, or apply a style preset?",tag:"Done in under a minute"},
+ whatYouGet:[{ico:"⚡",h:"No setup",p:"No browser, no API key, no app switching."},{ico:"🎛️",h:"Smart model pick",p:"Refines your prompt and picks the right FLUX model."},{ico:"🔁",h:"Re-rolls & presets",p:"Variants and style presets built in."}],
+ steps:[{h:"Describe it",p:"Plain language is enough."},{h:"It refines & renders",p:"Right model, right dimensions."},{h:"Saved",p:"Straight to Media Manager, ready to use."}]},
+
+{id:"outfit-day",name:"Outfit of the Day",creator:"Idle Hands",cat:"Creative",ico:"👗",rating:4.5,installs:"940",
+ outcome:"An outfit for any occasion, visualized",
+ mech:"Combines inspiration from Pinterest and Instagram, then delivers 4 images per look - 2 real references and 2 AI visualizations of the outfit on a person.",
+ lede:"Tell it the occasion. It pulls real inspiration, proposes a few directions in chat, then hands you 4 images per look - real references plus AI try-ons - saved and opened for you.",
+ apps:["Pinterest","Instagram","Google Images"],credits:"~7 / look",
+ perms:["Search style inspiration","Generate outfit visualizations","Saves images to Downloads"],
+ example:{cmd:"outfit for a beach wedding, men's",type:"list",title:"2 directions proposed",
+   rows:[["Linen & loafers","relaxed, light tones","b"],["Pastel suit","dressier option","g"],["Per look","4 images: 2 refs + 2 AI",""]],tag:"Saved & opened in Downloads"},
+ whatYouGet:[{ico:"💡",h:"Real inspiration",p:"Pulled from Pinterest and Instagram."},{ico:"🖼️",h:"See it on a person",p:"AI visualizations, not just mood boards."},{ico:"📥",h:"Saved for you",p:"4 images per look, opened automatically."}],
+ steps:[{h:"Name the occasion",p:"And your styling preference."},{h:"Pick a direction",p:"It proposes 2-3 in chat."},{h:"Get the looks",p:"4 images per outfit, saved to Downloads."}]},
+
+{id:"screen-break",name:"Screen Break Buddy",creator:"Idle Hands",cat:"Wellbeing",ico:"🌿",rating:4.6,installs:"1.0k",
+ outcome:"A nudge to rest before you burn out",
+ mech:"A friendly character pops up at your set interval to nudge you to stretch, rest your eyes and hydrate - because your health beats one more scroll.",
+ lede:"It's easy to lose hours to the screen. Set an interval once, and a friendly character checks in - reminding you to stretch, blink and drink some water.",
+ apps:["BlueStacks overlay"],credits:"~1 / day",
+ perms:["Show a gentle reminder overlay","On your chosen interval","No data leaves your device"],
+ example:{cmd:"remind me to take breaks every 45 min",type:"text",title:"Break Buddy is on",
+   text:"Every 45 minutes a friendly character will pop in: 'Time to stretch those legs and rest your eyes 👀 - grab some water!' Set once, runs all day.",tag:"Your health > one more scroll"},
+ whatYouGet:[{ico:"🧘",h:"Gentle nudges",p:"Stretch, blink, hydrate - on your schedule."},{ico:"⏱️",h:"Set once",p:"Pick the interval and forget it."},{ico:"🙂",h:"Friendly, not naggy",p:"A character that makes the break feel good."}],
+ steps:[{h:"Set the interval",p:"Every 30, 45 or 60 minutes."},{h:"It watches the clock",p:"Quietly, in the background."},{h:"Take the break",p:"A friendly nudge when it's time."}]},
+
+{id:"qa-smoke",name:"Mobile QA Smoke Test",creator:"Ashish Pathak",cat:"Developer",ico:"🧪",rating:4.6,installs:"580",
+ outcome:"Catch app bugs before your users do",
+ mech:"Runs a daily smoke test of an Android app in natural language: cold launch, sign-in, exercises the top screens, logs every defect, and produces a pass/fail report.",
+ lede:"Appium with BlueStacks is a pain. Describe the flow in plain English instead - it cold-launches, signs in, walks the key screens, and reports every defect with screenshots.",
+ apps:["Any Android app"],credits:"~8 / run",
+ perms:["Launch and drive an Android app","Log UI defects & slowdowns","Returns a pass/fail report"],
+ example:{cmd:"smoke test my app's login + checkout",type:"list",title:"Daily smoke test - 1 fail",
+   rows:[["Cold launch","ok (1.8s)","g"],["Sign-in","ok","g"],["Checkout","⚠ button overlaps on 1080p","b"],["Report","pass/fail + screenshots ready",""]],tag:"Caught before release"},
+ whatYouGet:[{ico:"🗣️",h:"Natural-language tests",p:"No Appium setup - describe the flow."},{ico:"🐞",h:"Defects logged",p:"Every UI issue and slowdown, with screenshots."},{ico:"📋",h:"Pass/fail report",p:"A clear daily verdict you can act on."}],
+ steps:[{h:"Describe the flow",p:"The screens that matter most."},{h:"It runs the test",p:"Cold launch, sign-in, key screens."},{h:"Read the report",p:"Pass/fail with screenshots of any defect."}]}
+];
+
+/* ============ APP / RENDER ============ */
+const $ = s => document.querySelector(s);
+let activeCat = "All";
+let query = "";
+
+function catStyle(cat){const m=CATS[cat]||{c:"#eef",t:"#333"};return `background:${m.c};color:${m.t}`;}
+
+function cardHTML(s){
+  return `<div class="card" onclick="showDetail('${s.id}')">
+    ${s.featured?'<span class="feat-badge">FEATURED</span>':''}
+    <div class="top">
+      <div class="ico" style="${catStyle(s.cat)}">${s.ico}</div>
+      <span class="cat-tag">${s.cat}</span>
+    </div>
+    <h3>${s.outcome}</h3>
+    <div class="mech">${s.mech}</div>
+    <div class="foot">
+      <div class="rate">⭐ <b>${s.rating}</b> · ${s.installs}</div>
+      <div class="add">+ Add to BlueAI</div>
+    </div>
+  </div>`;
+}
+
+function featHTML(s){
+  return `<div class="feat-card" style="background:${GRADS[s.grad]}" onclick="showDetail('${s.id}')">
+    <div class="blob"></div>
+    <div><div class="fc-ico">${s.ico}</div>
+    <h3>${s.outcome}</h3>
+    <p>${s.mech}</p></div>
+    <div class="fc-foot">⭐ ${s.rating} · ${s.installs} installs &nbsp;·&nbsp; ${s.name} →</div>
+  </div>`;
+}
+
+function renderCats(){
+  const cats = ["All",...Object.keys(CATS)];
+  $("#cats").innerHTML = cats.map(c=>{
+    const m = c==="All"?{ico:"✨"}:CATS[c];
+    return `<div class="chip ${activeCat===c?'active':''}" onclick="setCat('${c}')">${m.ico} ${c}</div>`;
+  }).join("");
+}
+
+function renderGrid(){
+  let list = SKILLS.filter(s=>{
+    const okCat = activeCat==="All" || s.cat===activeCat;
+    const q = query.trim().toLowerCase();
+    const okQ = !q || (s.name+s.outcome+s.mech+s.cat+s.creator).toLowerCase().includes(q);
+    return okCat && okQ;
+  });
+  // featured row only on default view
+  const showFeat = activeCat==="All" && !query.trim();
+  $("#featuredSec").style.display = showFeat ? "" : "none";
+  if(showFeat){ $("#featured").innerHTML = SKILLS.filter(s=>s.featured).map(featHTML).join(""); }
+
+  $("#catalogTitle").textContent = activeCat==="All" ? (query.trim()?`Results for “${query.trim()}”`:"All skills") : activeCat+" skills";
+  $("#catalogSub").textContent = `${list.length} skill${list.length!==1?'s':''} · 1-tap install · works inside your apps`;
+  $("#grid").innerHTML = list.map(cardHTML).join("");
+  $("#empty").style.display = list.length? "none":"block";
+}
+
+function setCat(c){activeCat=c; if(c!=="All"){} renderCats(); renderGrid(); $("#catalog").scrollIntoView({behavior:"smooth"});}
+function onSearch(v){query=v; // mirror both search boxes
+  if($("#navSearch").value!==v)$("#navSearch").value=v;
+  if($("#heroSearch").value!==v)$("#heroSearch").value=v;
+  activeCat="All"; renderCats(); renderGrid();}
+
+/* ----- detail ----- */
+function resultBlock(ex){
+  if(ex.type==="text"){
+    return `<div class="pv-bubble">${ex.text}<div class="pv-tag">✓ ${ex.tag}</div></div>`;
+  }
+  const rows = ex.rows.map(r=>`<div class="row"><span><strong>${r[0]}</strong></span><span class="${r[2]||''}">${r[1]}</span></div>`).join("");
+  return `<div class="pv-bubble"><div style="font-weight:750;margin-bottom:8px">${ex.title}</div>${rows}<div class="pv-tag">✓ ${ex.tag}</div></div>`;
+}
+
+function showDetail(id){
+  const s = SKILLS.find(x=>x.id===id); if(!s)return;
+  const related = SKILLS.filter(x=>x.cat===s.cat && x.id!==s.id).slice(0,3);
+  const relHTML = (related.length?related:SKILLS.filter(x=>x.id!==s.id).slice(0,3)).map(cardHTML).join("");
+  $("#detailInner").innerHTML = `
+   <div class="back" onclick="showHome()">← Back to marketplace</div>
+   <div class="d-hero">
+     <div>
+       <div class="d-eyebrow">
+         <div class="ico" style="${catStyle(s.cat)}">${s.ico}</div>
+         <span class="cat-tag">${s.cat}</span>
+       </div>
+       <h1>${s.outcome}</h1>
+       <p class="lede">${s.lede}</p>
+       <div class="d-cta">
+         <button class="btn btn-primary" onclick="alert('In the real product this installs ${s.name} to your BlueAI.')">✦ Add to BlueAI</button>
+         <button class="btn btn-ghost" onclick="document.getElementById('seeAction').scrollIntoView({behavior:'smooth'})">▶ See it in action</button>
+       </div>
+       <div class="d-meta">
+         <div><b>⭐ ${s.rating}</b>rating</div>
+         <div><b>${s.installs}</b>installs</div>
+         <div><b>${s.credits}</b>credits</div>
+       </div>
+     </div>
+     <div class="preview">
+       <div class="pv-head"><span class="dot"></span> BlueAI</div>
+       <div class="pv-body">
+         <div class="pv-user"><span>${s.example.cmd}</span></div>
+         <div class="pv-ai"><div class="av">✦</div>${resultBlock(s.example)}</div>
+       </div>
+     </div>
+   </div>
+
+   <div class="d-section">
+     <h2>What you get</h2>
+     <div class="s-sub">The outcome, not the mechanics.</div>
+     <div class="value-grid">
+       ${s.whatYouGet.map(v=>`<div class="value-item"><div class="vi-ico">${v.ico}</div><h4>${v.h}</h4><p>${v.p}</p></div>`).join("")}
+     </div>
+   </div>
+
+   <div class="d-section" id="seeAction">
+     <h2>See it in action</h2>
+     <div class="s-sub">One command in BlueAI → a real result.</div>
+     <div class="preview" style="max-width:560px">
+       <div class="pv-head"><span class="dot"></span> BlueAI · ${s.name}</div>
+       <div class="pv-body">
+         <div class="pv-user"><span>${s.example.cmd}</span></div>
+         <div class="pv-ai"><div class="av">✦</div>${resultBlock(s.example)}</div>
+       </div>
+     </div>
+   </div>
+
+   <div class="d-section">
+     <h2>How it works</h2>
+     <div class="s-sub">Three steps, fully on your instance.</div>
+     <div class="steps">
+       ${s.steps.map((st,i)=>`<div class="step"><div class="num">${i+1}</div><h4>${st.h}</h4><p>${st.p}</p></div>`).join("")}
+     </div>
+   </div>
+
+   <div class="d-section">
+     <h2>The details</h2>
+     <div class="s-sub">For when you want the specifics.</div>
+     <div class="specs">
+       <div>
+         <div class="spec-row"><span class="k">Creator</span><span class="v">${s.creator}</span></div>
+         <div class="spec-row"><span class="k">Category</span><span class="v">${s.cat}</span></div>
+         <div class="spec-row"><span class="k">Credits</span><span class="v">${s.credits}</span></div>
+         <div class="spec-row"><span class="k">Works with</span><span class="v"><div class="apps">${s.apps.map(a=>`<span>${a}</span>`).join("")}</div></span></div>
+       </div>
+       <div>
+         <div style="font-weight:750;margin-bottom:6px;font-size:14px">Permissions</div>
+         ${s.perms.map(p=>`<div class="perm"><span class="ck">✓</span><span>${p}</span></div>`).join("")}
+       </div>
+     </div>
+   </div>
+
+   <div class="d-section">
+     <h2>More ${s.cat} skills</h2>
+     <div class="s-sub">Pairs well with these.</div>
+     <div class="grid">${relHTML}</div>
+   </div>
+  `;
+  hideViews(); $("#detail").style.display="block"; window.scrollTo(0,0);
+}
+
+function hideViews(){ ["#landing","#home","#detail","#creators"].forEach(v=>$(v).style.display="none"); }
+function showLanding(){ hideViews(); $("#landing").style.display="block"; window.scrollTo(0,0); }
+function showHome(){ hideViews(); $("#home").style.display="block"; window.scrollTo(0,0); }
+
+/* ----- for creators ----- */
+function showCreators(){ hideViews(); $("#creators").style.display="block"; window.scrollTo(0,0); }
+
+function submitIdea(e){
+  e.preventDefault();
+  const form = e.target;
+  const need = {name:"f-name", outcome:"f-outcome", category:"f-cat", how:"f-how", creator:"f-creator", email:"f-email"};
+  let ok = true, firstBad=null;
+  for(const [field,id] of Object.entries(need)){
+    const wrap = document.getElementById(id);
+    const val = (form[field].value||"").trim();
+    const bad = !val || (field==="email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val));
+    wrap.classList.toggle("error", bad);
+    if(bad){ ok=false; if(!firstBad) firstBad=wrap; }
+  }
+  if(!ok){ firstBad.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  const email = form.email.value.trim();
+  const name = form.name.value.trim();
+  document.getElementById("pitchForm").innerHTML = `
+    <div class="success">
+      <div class="ok">✓</div>
+      <h3>Idea submitted 🎉</h3>
+      <p>Thanks for pitching <span class="em">${name}</span>. Our team will review it and reply to <span class="em">${email}</span> either way.</p>
+      <div class="next">
+        <div class="nx">🔍 <span><b>We review your idea.</b> Usually within a few days.</span></div>
+        <div class="nx">📧 <span><b>If approved, you get an email</b> at ${email} with <b>5,000 free credits</b>.</span></div>
+        <div class="nx">📲 <span><b>Download BlueAI &amp; log in with ${email}</b> to claim the credits and build your skill.</span></div>
+        <div class="nx">🚀 <span><b>Your skill goes live</b> on BlueStacks.ai for everyone.</span></div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="showHome()">Browse the marketplace →</button>
+    </div>`;
+  document.getElementById("pitchForm").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ===================== GUIDED JOURNEY ===================== */
+const GOAL_CHIPS = [
+  {label:"💸 Buy at the lowest price", q:"compare prices before I buy"},
+  {label:"💬 Catch up on my chats", q:"summarize my unread messages"},
+  {label:"🎮 Get unstuck in a game", q:"help me beat a quest"},
+  {label:"🎁 Redeem my game codes", q:"redeem gift codes"},
+  {label:"📣 Grow my audience", q:"grow my reddit and twitter audience"},
+  {label:"🧾 Automate my shop", q:"automate my business orders and invoices"},
+  {label:"🎨 Generate an image", q:"generate an AI image"},
+  {label:"🛠️ Build my own skill", q:"build my own skill"}
+];
+
+const MODELS = [
+  {id:"claude", ic:"🟣", name:"Claude", note:"Best for careful multi-step reasoning"},
+  {id:"gpt",    ic:"🟢", name:"GPT",    note:"Strong all-rounder"},
+  {id:"gemini", ic:"🔵", name:"Gemini", note:"Fast, great with visuals"},
+  {id:"llama",  ic:"🦙", name:"Llama (local)", note:"Run on your own hardware"}
+];
+
+let JX = null; // journey state
+
+function matchSkill(q){
+  const s = (q||"").toLowerCase().trim();
+  if(!s) return null;
+  if(/(build|create|make|publish|sell).*(skill|idea)|my own skill/.test(s)) return {isCreatorProgram:true};
+  let best=null, score=-1;
+  for(const sk of SKILLS){
+    const hay=(sk.name+" "+sk.outcome+" "+sk.mech+" "+sk.cat+" "+sk.apps.join(" ")).toLowerCase();
+    let sc=0;
+    for(const w of s.split(/\s+/)){ if(w.length>2 && hay.includes(w)) sc++; }
+    if(sc>score){score=sc; best=sk;}
+  }
+  return score>0 ? best : SKILLS[0];
+}
+
+function startJourney(goal){
+  const m = matchSkill(goal);
+  if(m && m.isCreatorProgram){ closeJourney(); showCreators(); document.getElementById("pitchForm").scrollIntoView({behavior:"smooth"}); return; }
+  const sk = m || SKILLS[0];
+  JX = { skill:sk, goal:(goal||"").trim(), step:0, model:null, phone:null,
+         needsPhone:true, steps:["skill","model","login","phone","ready"] };
+  if(!JX.needsPhone) JX.steps = JX.steps.filter(s=>s!=="phone");
+  $("#journey").classList.add("open");
+  renderJourney();
+}
+function closeJourney(){ $("#journey").classList.remove("open"); }
+
+function jxNext(){ if(JX.step < JX.steps.length-1){ JX.step++; renderJourney(); } }
+function jxBack(){ if(JX.step>0){ JX.step--; renderJourney(); } }
+function pickModel(id){ JX.model=id; renderJourney(); }
+function pickPhone(id){ if(id==="real") return; JX.phone=id; renderJourney(); }
+
+function renderJourney(){
+  const step = JX.steps[JX.step];
+  // dots
+  $("#stepDots").innerHTML = JX.steps.map((s,i)=>`<span class="sd ${i<JX.step?'done':''} ${i===JX.step?'on':''}"></span>`).join("");
+  const body=$("#modalBody"), foot=$("#modalFoot"); let canNext=true;
+
+  if(step==="skill"){
+    const sk=JX.skill;
+    body.innerHTML = `<div class="kicker">Step 1 · Your skill</div>
+      <h3>${sk.outcome}</h3>
+      <p class="msub">For "${JX.goal||sk.outcome}", Blue AI will use the <b>${sk.name}</b> skill.</p>
+      <div class="opt-card sel" style="cursor:default">
+        <div class="oc-ic" style="${catStyle(sk.cat)}">${sk.ico}</div>
+        <div class="oc-t"><b>${sk.name}</b><span>${sk.mech.slice(0,90)}…</span></div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px">Not quite right? <a style="color:var(--blue);cursor:pointer" onclick="closeJourney();showHome()">browse all skills →</a></div>`;
+  }
+  else if(step==="model"){
+    body.innerHTML = `<div class="kicker">Step 2 · Choose your model</div>
+      <h3>Which LLM should power it?</h3>
+      <p class="msub">Blue AI works with the model you trust. You can switch any time.</p>
+      ${MODELS.map(m=>`<div class="opt-card ${JX.model===m.id?'sel':''}" onclick="pickModel('${m.id}')">
+        <div class="oc-ic">${m.ic}</div>
+        <div class="oc-t"><b>${m.name}</b><span>${m.note}</span></div>
+        ${JX.model===m.id?'<div class="oc-r check">✓</div>':''}
+      </div>`).join("")}`;
+    canNext = !!JX.model;
+  }
+  else if(step==="login"){
+    body.innerHTML = `<div class="kicker">Step 3 · Log in</div>
+      <h3>Sign in to Blue AI</h3>
+      <p class="msub">So your skills, model choice and credits stay with you across devices.</p>
+      <button class="login-btn" onclick="JX.loggedIn=true;renderJourney()">🔵 Continue with Google</button>
+      <button class="login-btn" onclick="JX.loggedIn=true;renderJourney()">✉️ Continue with email</button>
+      ${JX.loggedIn?'<div style="text-align:center;color:var(--green);font-weight:700;font-size:14px;margin-top:6px">✓ Signed in</div>':''}`;
+    canNext = !!JX.loggedIn;
+  }
+  else if(step==="phone"){
+    body.innerHTML = `<div class="kicker">Step 4 · Connect a phone</div>
+      <h3>This task needs a phone</h3>
+      <p class="msub">Blue AI runs the skill on a device. Spin up a virtual phone instantly, or bring your own.</p>
+      <div class="opt-card ${JX.phone==='virtual'?'sel':''}" onclick="pickPhone('virtual')">
+        <div class="oc-ic">📱</div>
+        <div class="oc-t"><b>Virtual phone</b><span>Instant, runs via BlueStacks - nothing to plug in</span></div>
+        ${JX.phone==='virtual'?'<div class="oc-r check">✓</div>':'<div class="oc-r green">AVAILABLE</div>'}
+      </div>
+      <div class="opt-card dis">
+        <div class="oc-ic">📲</div>
+        <div class="oc-t"><b>Real phone</b><span>Connect your own Android device</span></div>
+        <div class="oc-r soon">COMING SOON</div>
+      </div>`;
+    canNext = !!JX.phone;
+  }
+  else if(step==="ready"){
+    const sk=JX.skill, mdl=MODELS.find(m=>m.id===JX.model)||{name:"BlueAI default"};
+    body.innerHTML = `<div class="ready-box">
+      <div class="rb-ic">🚀</div>
+      <h3>You're all set</h3>
+      <p class="msub">Blue AI is ready to run <b>${sk.name}</b> for you.</p>
+      <div class="ready-sum">
+        <div class="rs"><span class="k">Skill</span><span class="v">${sk.ico} ${sk.name}</span></div>
+        <div class="rs"><span class="k">Model</span><span class="v">${mdl.name}</span></div>
+        <div class="rs"><span class="k">Signed in</span><span class="v">✓ Yes</span></div>
+        ${JX.steps.includes("phone")?`<div class="rs"><span class="k">Phone</span><span class="v">Virtual (BlueStacks)</span></div>`:''}
+      </div>
+    </div>`;
+  }
+
+  // footer
+  if(step==="ready"){
+    foot.innerHTML = `<span class="back" onclick="jxBack()">← Back</span>
+      <button class="cont" onclick="alert('In the real product, Blue AI now launches ${JX.skill.name} on your connected phone.')">✦ Launch in Blue AI</button>`;
+  } else {
+    foot.innerHTML = `${JX.step>0?'<span class="back" onclick="jxBack()">← Back</span>':'<span class="back" onclick="closeJourney()">Cancel</span>'}
+      <button class="cont" ${canNext?'':'disabled'} onclick="jxNext()">Continue →</button>`;
+  }
+}
+
+/* init */
+$("#statCount").textContent = SKILLS.length;
+$("#creators").querySelector('select[name=category]').innerHTML =
+  '<option value="">Choose one…</option>' + Object.keys(CATS).map(c=>`<option value="${c}">${CATS[c].ico} ${c}</option>`).join("");
+$("#goalChips").innerHTML = GOAL_CHIPS.map(g=>`<span class="gc" onclick="startJourney('${g.q}')">${g.label}</span>`).join("");
+renderCats(); renderGrid();
+showLanding();
+</script>
+</body>
+</html>
